@@ -1,5 +1,5 @@
 Project Collaboration with 
 
 Andrii Luchko
-Xingye "Aleex" Li
+Xingye "Alex" Li
 Ronald Adomako
