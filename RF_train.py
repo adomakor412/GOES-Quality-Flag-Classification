@@ -9,6 +9,9 @@ import h5py
 from sklearn.ensemble import RandomForestClassifier as RF
 from sklearn.model_selection import train_test_split
 import pickle
+import datetime 
+
+print('strated at: ', datetime.datetime.now())
 
 mainpath = 'data/'
 
@@ -24,15 +27,26 @@ with open("test_files.txt", 'w') as f:
     for item in test:
         f.write("%s\n" % item)
 
-rf = RF(n_estimators=0, criterion='gini', max_depth=10, random_state=42, warm_start=True)
+rf = RF(n_estimators=300, criterion='gini', max_depth=15, verbose=1, n_jobs=-1, random_state=42)
 
+n = 401401
+train_data = np.empty((n*len(train),4), float)
+train_label = np.empty((n*len(train)), int)
+
+
+counter = 0
 for file in train:
     with h5py.File(file, 'r') as f:
-        rf.n_estimators += 1
-        label = f['label'][()]
+        index = f['label'][()]
         data = f['data'][()]
-        rf.fit(data, label)
-    print("file ", file, "done")
+        train_data[counter*n:(counter+1)*n] = data
+        train_label[counter*n:(counter+1)*n] = index
         
-save = 'rf_model_depth10.sav'
+    counter += 1
+    print(str(int((counter/len(train))*100)) + '%', end='\r', flush = True)
+
+rf.fit(train_data, train_label)    
+save = 'data/fitted_models/rf_model_entire_set_depth_15.sav'
 pickle.dump(rf, open(save, 'wb'))
+
+print('finished at: ', datetime.datetime.now())
