@@ -72,7 +72,7 @@ def createData(outpath):
                             skip = True
                             print("", file=log)
                             print(goes16_url, response16.status_code, file=log)
-                            print(goes17_url, response16.status_code, file=log)
+                            print(goes17_url, response17.status_code, file=log)
                             print(e, file=log)
                             break
                             
