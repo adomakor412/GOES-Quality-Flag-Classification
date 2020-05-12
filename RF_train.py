@@ -27,7 +27,7 @@ with open("test_files.txt", 'w') as f:
     for item in test:
         f.write("%s\n" % item)
 
-rf = RF(n_estimators=300, criterion='gini', max_depth=15, verbose=1, n_jobs=-1, random_state=42)
+rf = RF(n_estimators=100, criterion='gini', max_depth=10, verbose=10, n_jobs=5, random_state=42)
 
 n = 401401
 train_data = np.empty((n*len(train),4), float)
@@ -46,7 +46,7 @@ for file in train:
     print(str(int((counter/len(train))*100)) + '%', end='\r', flush = True)
 
 rf.fit(train_data, train_label)    
-save = 'data/fitted_models/rf_model_entire_set_depth_15.sav'
+save = 'data/fitted_models/rf_model_entire_set_depth_10.sav'
 pickle.dump(rf, open(save, 'wb'))
 
 print('finished at: ', datetime.datetime.now())
