@@ -12,10 +12,10 @@ import pickle
 import datetime 
 
 seed = 42
+start = datetime.datetime.now()
+print('strated at: ', start)
 
-print('strated at: ', datetime.datetime.now())
-
-mainpath = 'data/'
+mainpath = 'data_window/'
 
 filenames = []
 for root, dirs, files in os.walk(mainpath):
@@ -25,16 +25,15 @@ for root, dirs, files in os.walk(mainpath):
                 
 train, test = train_test_split(filenames, test_size = 0.1, random_state = seed)
 
-with open("test_files.txt", 'w') as f:
+with open("test_files_2.txt", 'w') as f:
     for item in test:
         f.write("%s\n" % item)
 
 rf = RF(n_estimators=100, criterion='gini', max_depth=10, verbose=10, n_jobs=5, random_state=seed)
 
-n = 401401
-train_data = np.empty((n*len(train),4), float)
+n = 399*999
+train_data = np.empty((n*len(train),36), float)
 train_label = np.empty((n*len(train)), int)
-
 
 counter = 0
 for file in train:
@@ -47,9 +46,9 @@ for file in train:
     counter += 1
     print(str(int((counter/len(train))*100)) + '%', end='\r', flush = True)
 
+#[147840980,   1861759,    844554,    211337,    311149]
+#[0.9786271 , 0.01232383, 0.00559049, 0.00139894, 0.00205964]
 
-#[544491999,   9633360,   3808992,    770355,    848288]
-#[0.97308388, 0.01721617, 0.00680721, 0.00137673, 0.00151601]
 train_label[np.where(train_label > 4)] = 4
 index0 = np.where(train_label == 0)[0]
 index1 = np.where(train_label == 1)[0]
@@ -66,8 +65,7 @@ index = np.concatenate((index0,index1,index2,indexn), axis=None)
 train_data = train_data[index]
 train_label = train_label[index]
 #unique, counts = np.unique(train_label, return_counts=True)
-#[5444919, 4816680, 3808992,  770355,  848288]
-#[0.34704811, 0.30700543, 0.24277744, 0.04910087, 0.05406816]
+
 
 index3 = np.where(train_label == 3)[0]
 index4 = np.where(train_label == 4)[0]
@@ -81,12 +79,14 @@ index = np.concatenate((index3,index4,indexn), axis=None)
 train_data = train_data[index]
 train_label = train_label[index]
 
-#[5444919, 4816680, 3808992, 1540710, 1696576]
-#[0.31459196, 0.2782941 , 0.22007274, 0.08901785, 0.09802335]
+#[739204, 465439, 422277, 422674, 622298]
+#[0.27665939, 0.17419828, 0.15804419, 0.15819277, 0.23290537]
 
 print('prep complete, now fitting')
 rf.fit(train_data, train_label)    
-save = 'data/fitted_models/rf_model_down_upsample_2_set_depth_10.sav'
+save = 'data/fitted_models/rf_model_window_set_depth_10.sav'
 pickle.dump(rf, open(save, 'wb'))
 
-print('finished at: ', datetime.datetime.now())
+finish = datetime.datetime.now()
+print('finished at: ', finish)
+print('took: ', finish-start)
